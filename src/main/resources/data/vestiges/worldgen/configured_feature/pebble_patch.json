@@ -1,8 +1,8 @@
 {
   "type": "minecraft:random_patch",
   "config": {
-    "tries": 10,
-    "xz_spread": 4,
+    "tries": 6,
+    "xz_spread": 3,
     "y_spread": 2,
     "feature": {
       "feature": {
@@ -11,7 +11,27 @@
           "to_place": {
             "type": "minecraft:weighted_state_provider",
             "entries": [
-              { "weight": 1, "data": { "Name": "vestiges:pebble" } }
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "vestiges:pebble",
+                  "Properties": { "variant": "small" }
+                }
+              },
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "vestiges:pebble",
+                  "Properties": { "variant": "flat" }
+                }
+              },
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "vestiges:pebble",
+                  "Properties": { "variant": "large" }
+                }
+              }
             ]
           }
         }
@@ -20,8 +40,8 @@
         {
           "type": "minecraft:block_predicate_filter",
           "predicate": {
-            "type": "minecraft:matching_blocks",
-            "blocks": ["minecraft:air"]
+            "type": "minecraft:would_survive",
+            "state": { "Name": "vestiges:pebble" }
           }
         }
       ]
