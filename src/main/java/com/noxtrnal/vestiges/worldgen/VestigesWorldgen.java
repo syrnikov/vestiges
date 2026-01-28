@@ -12,7 +12,7 @@ import net.minecraft.world.gen.feature.PlacedFeature;
 public final class VestigesWorldgen {
 	public static final RegistryKey<PlacedFeature> GRASS_VARIANTS_PATCH = RegistryKey.of(
 			RegistryKeys.PLACED_FEATURE,
-			new Identifier(Vestiges.MOD_ID, "grass_variants_patch")
+			Identifier.of(Vestiges.MOD_ID, "grass_variants_patch")
 	);
 
 	private VestigesWorldgen() {

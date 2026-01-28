@@ -39,7 +39,7 @@ public final class VestigesBlocks {
 	}
 
 	private static Block registerBlock(String name, Block block) {
-		Identifier id = new Identifier(Vestiges.MOD_ID, name);
+		Identifier id = Identifier.of(Vestiges.MOD_ID, name);
 		Registry.register(Registries.BLOCK, id, block);
 		Registry.register(Registries.ITEM, id, new BlockItem(block, new Item.Settings()));
 		return block;
