@@ -14,6 +14,10 @@ public final class VestigesWorldgen {
 			RegistryKeys.PLACED_FEATURE,
 			Identifier.of(Vestiges.MOD_ID, "grass_variants_patch")
 	);
+	public static final RegistryKey<PlacedFeature> PEBBLE_PATCH = RegistryKey.of(
+			RegistryKeys.PLACED_FEATURE,
+			Identifier.of(Vestiges.MOD_ID, "pebble_patch")
+	);
 
 	private VestigesWorldgen() {
 	}
@@ -23,6 +27,11 @@ public final class VestigesWorldgen {
 				BiomeSelectors.foundInOverworld(),
 				GenerationStep.Feature.VEGETAL_DECORATION,
 				GRASS_VARIANTS_PATCH
+		);
+		BiomeModifications.addFeature(
+				BiomeSelectors.foundInOverworld(),
+				GenerationStep.Feature.VEGETAL_DECORATION,
+				PEBBLE_PATCH
 		);
 	}
 }

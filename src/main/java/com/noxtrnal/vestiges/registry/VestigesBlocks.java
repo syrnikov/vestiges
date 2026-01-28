@@ -1,6 +1,7 @@
 package com.noxtrnal.vestiges.registry;
 
 import com.noxtrnal.vestiges.Vestiges;
+import com.noxtrnal.vestiges.block.PebbleBlock;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -29,6 +30,16 @@ public final class VestigesBlocks {
 			"medium_grass",
 			ShortPlantBlock::new
 	);
+	public static final Block PEBBLE = registerBlock(
+			"pebble",
+			settings -> new PebbleBlock(
+					settings
+							.noCollision()
+							.strength(0.5F, 0.5F)
+							.offset(AbstractBlock.OffsetType.XZ)
+			),
+			Blocks.STONE
+	);
 
 	private VestigesBlocks() {
 	}
@@ -38,14 +49,23 @@ public final class VestigesBlocks {
 			entries.add(SHORT_GRASS);
 			entries.add(PATCHY_GRASS);
 			entries.add(MEDIUM_GRASS);
+			entries.add(PEBBLE);
 		});
 	}
 
 	private static Block registerBlock(String name, Function<AbstractBlock.Settings, Block> blockFactory) {
+		return registerBlock(name, blockFactory, Blocks.SHORT_GRASS);
+	}
+
+	private static Block registerBlock(
+			String name,
+			Function<AbstractBlock.Settings, Block> blockFactory,
+			Block settingsSource
+	) {
 		Identifier id = Identifier.of(Vestiges.MOD_ID, name);
 		RegistryKey<Block> blockKey = RegistryKey.of(RegistryKeys.BLOCK, id);
 		RegistryKey<Item> itemKey = RegistryKey.of(RegistryKeys.ITEM, id);
-		AbstractBlock.Settings settings = AbstractBlock.Settings.copy(Blocks.SHORT_GRASS).registryKey(blockKey);
+		AbstractBlock.Settings settings = AbstractBlock.Settings.copy(settingsSource).registryKey(blockKey);
 		Block block = blockFactory.apply(settings);
 		Registry.register(Registries.BLOCK, id, block);
 		Registry.register(
