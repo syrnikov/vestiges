@@ -1,3 +1,6 @@
 {
-  "parent": "vestiges:block/patchy_grass"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vestiges:block/patchy_grass"
+  }
 }

@@ -1,0 +1,29 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:interact_with_crafting_table": 1,
+      "minecraft:sprint_one_cm": 2095,
+      "minecraft:time_since_rest": 3197,
+      "minecraft:walk_one_cm": 5551,
+      "minecraft:total_world_time": 3241,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 16118,
+      "minecraft:sneak_time": 29,
+      "minecraft:play_time": 3197,
+      "minecraft:jump": 9,
+      "minecraft:time_since_death": 3197,
+      "minecraft:drop": 1
+    },
+    "minecraft:used": {
+      "minecraft:crafting_table": 1,
+      "vestiges:medium_grass": 2
+    },
+    "minecraft:picked_up": {
+      "vestiges:pebble": 1
+    },
+    "minecraft:dropped": {
+      "vestiges:pebble": 1
+    }
+  },
+  "DataVersion": 4671
+}

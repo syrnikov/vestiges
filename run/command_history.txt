@@ -1,2 +1,7 @@
 /locate biome minecraft:pale_garden
 /tp @s 954 64 -441
+/setblock 707 62 -594 vestiges:pebble
+/setblock -151 68 91 vestiges:pebble
+/setblock ~ ~ ~ vestiges:pebble
+/setblock -151 68 91 vestiges:pebble
+/setblock ~ ~ ~ vestiges:pebble

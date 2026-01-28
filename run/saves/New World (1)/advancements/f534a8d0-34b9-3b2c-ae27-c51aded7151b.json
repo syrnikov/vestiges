@@ -1,0 +1,28 @@
+{
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2026-01-28 13:35:06 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/chest": {
+    "criteria": {
+      "has_lots_of_items": "2026-01-28 13:37:40 +0200"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:dark_forest": "2026-01-28 13:35:06 +0200",
+      "minecraft:birch_forest": "2026-01-28 13:35:19 +0200"
+    },
+    "done": false
+  },
+  "minecraft:story/root": {
+    "criteria": {
+      "crafting_table": "2026-01-28 13:37:32 +0200"
+    },
+    "done": true
+  },
+  "DataVersion": 4671
+}
