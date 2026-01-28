@@ -1,0 +1,29 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:grass_block": 19,
+      "minecraft:bone_meal": 3,
+      "minecraft:crafting_table": 1,
+      "vestiges:medium_grass": 2,
+      "vestiges:short_grass": 1,
+      "vestiges:patchy_grass": 2
+    },
+    "minecraft:custom": {
+      "minecraft:interact_with_crafting_table": 1,
+      "minecraft:time_since_rest": 4381,
+      "minecraft:walk_one_cm": 5244,
+      "minecraft:leave_game": 1,
+      "minecraft:walk_under_water_one_cm": 283,
+      "minecraft:play_time": 4381,
+      "minecraft:jump": 17,
+      "minecraft:time_since_death": 4381,
+      "minecraft:sprint_one_cm": 3438,
+      "minecraft:total_world_time": 6846,
+      "minecraft:fly_one_cm": 35805,
+      "minecraft:walk_on_water_one_cm": 5752,
+      "minecraft:crouch_one_cm": 1448,
+      "minecraft:sneak_time": 401
+    }
+  },
+  "DataVersion": 4671
+}
