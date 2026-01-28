@@ -1,3 +1,6 @@
 {
-  "parent": "vestiges:block/short_grass"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vestiges:block/short_grass"
+  }
 }
