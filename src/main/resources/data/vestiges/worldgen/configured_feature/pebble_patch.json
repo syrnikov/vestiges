@@ -11,7 +11,27 @@
           "to_place": {
             "type": "minecraft:weighted_state_provider",
             "entries": [
-              { "weight": 1, "data": { "Name": "vestiges:pebble" } }
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "vestiges:pebble",
+                  "Properties": { "variant": "small" }
+                }
+              },
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "vestiges:pebble",
+                  "Properties": { "variant": "flat" }
+                }
+              },
+              {
+                "weight": 1,
+                "data": {
+                  "Name": "vestiges:pebble",
+                  "Properties": { "variant": "large" }
+                }
+              }
             ]
           }
         }
