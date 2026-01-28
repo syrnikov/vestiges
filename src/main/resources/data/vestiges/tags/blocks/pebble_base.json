@@ -7,14 +7,10 @@
     "minecraft:podzol",
     "minecraft:rooted_dirt",
     "minecraft:moss_block",
-    "minecraft:mycelium",
     "minecraft:stone",
-    "minecraft:granite",
-    "minecraft:diorite",
     "minecraft:andesite",
-    "minecraft:tuff",
-    "minecraft:deepslate",
-    "minecraft:cobblestone",
+    "minecraft:diorite",
+    "minecraft:granite",
     "minecraft:gravel",
     "minecraft:sand"
   ]

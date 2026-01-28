@@ -1,6 +1,9 @@
 {
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
+	"textures": {
+		"missing": "minecraft:block/stone"
+	},
 	"elements": [
 		{
 			"from": [7, 0, 7],

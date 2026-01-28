@@ -1,18 +1,10 @@
 {
   "variants": {
     "": [
-      { "model": "vestiges:block/pebble_small", "y": 0 },
-      { "model": "vestiges:block/pebble_small", "y": 90 },
-      { "model": "vestiges:block/pebble_small", "y": 180 },
-      { "model": "vestiges:block/pebble_small", "y": 270 },
-      { "model": "vestiges:block/pebble_flat", "y": 0 },
-      { "model": "vestiges:block/pebble_flat", "y": 90 },
-      { "model": "vestiges:block/pebble_flat", "y": 180 },
-      { "model": "vestiges:block/pebble_flat", "y": 270 },
-      { "model": "vestiges:block/pebble_large", "y": 0 },
-      { "model": "vestiges:block/pebble_large", "y": 90 },
-      { "model": "vestiges:block/pebble_large", "y": 180 },
-      { "model": "vestiges:block/pebble_large", "y": 270 }
+      { "model": "vestiges:block/pebble", "y": 0 },
+      { "model": "vestiges:block/pebble", "y": 90 },
+      { "model": "vestiges:block/pebble", "y": 180 },
+      { "model": "vestiges:block/pebble", "y": 270 }
     ]
   }
 }
