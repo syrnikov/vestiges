@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "vestiges:short_grass",
+    "vestiges:patchy_grass",
+    "vestiges:medium_grass"
+  ]
+}

@@ -1,5 +1,7 @@
 package com.noxtrnal.vestiges;
 
+import com.noxtrnal.vestiges.registry.VestigesBlocks;
+import com.noxtrnal.vestiges.worldgen.VestigesWorldgen;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -19,6 +21,9 @@ public class Vestiges implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		LOGGER.info("Hello Fabric world!");
+		VestigesBlocks.register();
+		VestigesWorldgen.register();
+
+		LOGGER.info("Loaded Vestiges grass variants.");
 	}
 }

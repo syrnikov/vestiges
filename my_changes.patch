@@ -1,0 +1,573 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/src/client/java/com/noxtrnal/vestiges/VestigesClient.java b/src/client/java/com/noxtrnal/vestiges/VestigesClient.java
+index 8e3df66e51c2ea2784d912b1551286b4c36e8ae9..6f575144607b103e07b4270a4da6c8e549fa20f4 100644
+--- a/src/client/java/com/noxtrnal/vestiges/VestigesClient.java
++++ b/src/client/java/com/noxtrnal/vestiges/VestigesClient.java
+@@ -1,10 +1,33 @@
+ package com.noxtrnal.vestiges;
+ 
++import com.noxtrnal.vestiges.registry.VestigesBlocks;
+ import net.fabricmc.api.ClientModInitializer;
++import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
++import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
++import net.minecraft.client.color.world.BiomeColors;
++import net.minecraft.client.color.world.GrassColors;
++import net.minecraft.client.render.RenderLayer;
+ 
+ public class VestigesClient implements ClientModInitializer {
+ 	@Override
+ 	public void onInitializeClient() {
+-		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
++		BlockRenderLayerMap.INSTANCE.putBlock(VestigesBlocks.SHORT_GRASS, RenderLayer.getCutout());
++		BlockRenderLayerMap.INSTANCE.putBlock(VestigesBlocks.PATCHY_GRASS, RenderLayer.getCutout());
++		BlockRenderLayerMap.INSTANCE.putBlock(VestigesBlocks.MEDIUM_GRASS, RenderLayer.getCutout());
++
++		ColorProviderRegistry.BLOCK.register(
++				(state, world, pos, tintIndex) -> world != null && pos != null
++						? BiomeColors.getGrassColor(world, pos)
++						: GrassColors.getColor(0.5D, 1.0D),
++				VestigesBlocks.SHORT_GRASS,
++				VestigesBlocks.PATCHY_GRASS,
++				VestigesBlocks.MEDIUM_GRASS
++		);
++		ColorProviderRegistry.ITEM.register(
++				(stack, tintIndex) -> GrassColors.getColor(0.5D, 1.0D),
++				VestigesBlocks.SHORT_GRASS,
++				VestigesBlocks.PATCHY_GRASS,
++				VestigesBlocks.MEDIUM_GRASS
++		);
+ 	}
+-}
+\ No newline at end of file
++}
+diff --git a/src/main/java/com/noxtrnal/vestiges/Vestiges.java b/src/main/java/com/noxtrnal/vestiges/Vestiges.java
+index 3518fc5f38c54839864be53da10bf5ce5f1dd1d6..5762ea93d99d39c682910ac89485aec2d58410ea 100644
+--- a/src/main/java/com/noxtrnal/vestiges/Vestiges.java
++++ b/src/main/java/com/noxtrnal/vestiges/Vestiges.java
+@@ -1,24 +1,29 @@
+ package com.noxtrnal.vestiges;
+ 
++import com.noxtrnal.vestiges.registry.VestigesBlocks;
++import com.noxtrnal.vestiges.worldgen.VestigesWorldgen;
+ import net.fabricmc.api.ModInitializer;
+ 
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+ public class Vestiges implements ModInitializer {
+ 	public static final String MOD_ID = "vestiges";
+ 
+ 	// This logger is used to write text to the console and the log file.
+ 	// It is considered best practice to use your mod id as the logger's name.
+ 	// That way, it's clear which mod wrote info, warnings, and errors.
+ 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+ 
+ 	@Override
+ 	public void onInitialize() {
+ 		// This code runs as soon as Minecraft is in a mod-load-ready state.
+ 		// However, some things (like resources) may still be uninitialized.
+ 		// Proceed with mild caution.
+ 
+-		LOGGER.info("Hello Fabric world!");
++		VestigesBlocks.register();
++		VestigesWorldgen.register();
++
++		LOGGER.info("Loaded Vestiges grass variants.");
+ 	}
+-}
+\ No newline at end of file
++}
+diff --git a/src/main/java/com/noxtrnal/vestiges/registry/VestigesBlocks.java b/src/main/java/com/noxtrnal/vestiges/registry/VestigesBlocks.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..ffcd1ed1001b9734a4ddbf088c8850f737232ecc
+--- /dev/null
++++ b/src/main/java/com/noxtrnal/vestiges/registry/VestigesBlocks.java
+@@ -0,0 +1,47 @@
++package com.noxtrnal.vestiges.registry;
++
++import com.noxtrnal.vestiges.Vestiges;
++import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
++import net.minecraft.block.AbstractBlock;
++import net.minecraft.block.Block;
++import net.minecraft.block.Blocks;
++import net.minecraft.block.ShortPlantBlock;
++import net.minecraft.item.BlockItem;
++import net.minecraft.item.Item;
++import net.minecraft.item.ItemGroups;
++import net.minecraft.registry.Registries;
++import net.minecraft.registry.Registry;
++import net.minecraft.util.Identifier;
++
++public final class VestigesBlocks {
++	public static final Block SHORT_GRASS = registerBlock(
++			"short_grass",
++			new ShortPlantBlock(AbstractBlock.Settings.copy(Blocks.SHORT_GRASS))
++	);
++	public static final Block PATCHY_GRASS = registerBlock(
++			"patchy_grass",
++			new ShortPlantBlock(AbstractBlock.Settings.copy(Blocks.SHORT_GRASS))
++	);
++	public static final Block MEDIUM_GRASS = registerBlock(
++			"medium_grass",
++			new ShortPlantBlock(AbstractBlock.Settings.copy(Blocks.SHORT_GRASS))
++	);
++
++	private VestigesBlocks() {
++	}
++
++	public static void register() {
++		ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> {
++			entries.add(SHORT_GRASS);
++			entries.add(PATCHY_GRASS);
++			entries.add(MEDIUM_GRASS);
++		});
++	}
++
++	private static Block registerBlock(String name, Block block) {
++		Identifier id = new Identifier(Vestiges.MOD_ID, name);
++		Registry.register(Registries.BLOCK, id, block);
++		Registry.register(Registries.ITEM, id, new BlockItem(block, new Item.Settings()));
++		return block;
++	}
++}
+diff --git a/src/main/java/com/noxtrnal/vestiges/worldgen/VestigesWorldgen.java b/src/main/java/com/noxtrnal/vestiges/worldgen/VestigesWorldgen.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..d692b9fcc27d779a4309f4c86cb56d37211fc0de
+--- /dev/null
++++ b/src/main/java/com/noxtrnal/vestiges/worldgen/VestigesWorldgen.java
+@@ -0,0 +1,28 @@
++package com.noxtrnal.vestiges.worldgen;
++
++import com.noxtrnal.vestiges.Vestiges;
++import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
++import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
++import net.minecraft.registry.RegistryKey;
++import net.minecraft.registry.RegistryKeys;
++import net.minecraft.util.Identifier;
++import net.minecraft.world.gen.GenerationStep;
++import net.minecraft.world.gen.feature.PlacedFeature;
++
++public final class VestigesWorldgen {
++	public static final RegistryKey<PlacedFeature> GRASS_VARIANTS_PATCH = RegistryKey.of(
++			RegistryKeys.PLACED_FEATURE,
++			new Identifier(Vestiges.MOD_ID, "grass_variants_patch")
++	);
++
++	private VestigesWorldgen() {
++	}
++
++	public static void register() {
++		BiomeModifications.addFeature(
++				BiomeSelectors.foundInOverworld(),
++				GenerationStep.Feature.VEGETAL_DECORATION,
++				GRASS_VARIANTS_PATCH
++		);
++	}
++}
+diff --git a/src/main/resources/assets/vestiges/blockstates/medium_grass.json b/src/main/resources/assets/vestiges/blockstates/medium_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..9374111f90fb7c53b230e2bd8cdb0e6c597782ff
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/blockstates/medium_grass.json
+@@ -0,0 +1,7 @@
++{
++  "variants": {
++    "": {
++      "model": "vestiges:block/medium_grass"
++    }
++  }
++}
+diff --git a/src/main/resources/assets/vestiges/blockstates/patchy_grass.json b/src/main/resources/assets/vestiges/blockstates/patchy_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..69e705223cdf65a1da817208840a75ae18f863af
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/blockstates/patchy_grass.json
+@@ -0,0 +1,7 @@
++{
++  "variants": {
++    "": {
++      "model": "vestiges:block/patchy_grass"
++    }
++  }
++}
+diff --git a/src/main/resources/assets/vestiges/blockstates/short_grass.json b/src/main/resources/assets/vestiges/blockstates/short_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..066746b8f6ebbf8703a1c5511f90bc36a8c92fcd
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/blockstates/short_grass.json
+@@ -0,0 +1,7 @@
++{
++  "variants": {
++    "": {
++      "model": "vestiges:block/short_grass"
++    }
++  }
++}
+diff --git a/src/main/resources/assets/vestiges/lang/en_us.json b/src/main/resources/assets/vestiges/lang/en_us.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..32c315292e66bea1276a831d594ffec8cddf59bd
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/lang/en_us.json
+@@ -0,0 +1,5 @@
++{
++  "block.vestiges.short_grass": "Short Grass",
++  "block.vestiges.patchy_grass": "Patchy Grass",
++  "block.vestiges.medium_grass": "Medium Grass"
++}
+diff --git a/src/main/resources/assets/vestiges/models/block/medium_grass.json b/src/main/resources/assets/vestiges/models/block/medium_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..bc8926bf09a7ebdda0ab9be827bd7c188d7a7642
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/models/block/medium_grass.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "vestiges:block/medium_grass"
++  }
++}
+diff --git a/src/main/resources/assets/vestiges/models/block/patchy_grass.json b/src/main/resources/assets/vestiges/models/block/patchy_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..803d530a24c48f6a17d7678600355ab46f332bad
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/models/block/patchy_grass.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "vestiges:block/patchy_grass"
++  }
++}
+diff --git a/src/main/resources/assets/vestiges/models/block/short_grass.json b/src/main/resources/assets/vestiges/models/block/short_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..0c846c3a04e3294ad1499e9bfe3f0d93f443f33f
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/models/block/short_grass.json
+@@ -0,0 +1,6 @@
++{
++  "parent": "minecraft:block/cross",
++  "textures": {
++    "cross": "vestiges:block/short_grass"
++  }
++}
+diff --git a/src/main/resources/assets/vestiges/models/item/medium_grass.json b/src/main/resources/assets/vestiges/models/item/medium_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..df786df6c58ffe5078f333480ddbfff889180236
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/models/item/medium_grass.json
+@@ -0,0 +1,3 @@
++{
++  "parent": "vestiges:block/medium_grass"
++}
+diff --git a/src/main/resources/assets/vestiges/models/item/patchy_grass.json b/src/main/resources/assets/vestiges/models/item/patchy_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..f6fddba90054cda4cf2fb3cb6d244d2a6b6b69ac
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/models/item/patchy_grass.json
+@@ -0,0 +1,3 @@
++{
++  "parent": "vestiges:block/patchy_grass"
++}
+diff --git a/src/main/resources/assets/vestiges/models/item/short_grass.json b/src/main/resources/assets/vestiges/models/item/short_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..93c6195dbca361b3f1ad4d523a0cddba8e3a4752
+--- /dev/null
++++ b/src/main/resources/assets/vestiges/models/item/short_grass.json
+@@ -0,0 +1,3 @@
++{
++  "parent": "vestiges:block/short_grass"
++}
+diff --git a/src/main/resources/assets/vestiges/textures/block/medium_grass.png b/src/main/resources/assets/vestiges/textures/block/medium_grass.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..878ece544cea84bb1053d566974c66c8e2af50c6
+GIT binary patch
+literal 182
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`wVp1HAr*6y6C~y-y!E(JKk13b
+zHHXl{2~Bq1ci#ytW?aVS$~RkKSEGVu&a{NBk}7R^)|;%>tW&$LZNM5mA?F^`Wrif>
+z%6x9W^$WNcN&b+Jl)34!K_<-6$Nq3``^JZlZm@73<vOF(Q_#SfWGrx3X-C?cCY}`=
+foAMNj6qp&BbGN1ZY;UjxI)uT~)z4*}Q$iB}7ZE_6
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/vestiges/textures/block/patchy_grass.png b/src/main/resources/assets/vestiges/textures/block/patchy_grass.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..dbd9b8e37516aa1759e66696a706f9eed69cb434
+GIT binary patch
+literal 181
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`HJ&bxAr*6y6C~y-ym$FiKk13b
+zHHXl{2~B*qX5}3h8G_rD+I<D?I!ur;^WJcaN62}*Y@}>h_~h53Gn#Zg%<>yE88%Mb
+zvz>K$_yyLBJb(Ii`f?N^_*N?{oBwdz;Tr{oIZZ7|tZ9O776({1N_ON4#u$e=vR#RA
+eG#9X(z&LU7mM@=fTv`Zp2ZN`ppUXO@geCyZr9m$M
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/assets/vestiges/textures/block/short_grass.png b/src/main/resources/assets/vestiges/textures/block/short_grass.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..6ce6279814dd7d8e8def56923358814c648ae265
+GIT binary patch
+literal 178
+zcmeAS@N?(olHy`uVBq!ia0vp^0wB!61|;P_|4#%`m7Xq+Ar*6y6C~mk66=rD7d=^#
+zED@ShKKpG2dn~gL&rO38!#7O<XJ2enUfp~;QTRxj!o@oEo7xWN#B$;qI~P~8s`Tl~
+zY*V<ohjn)N1l^{M8@ZFDI<9ILe0|Ymus*?9;I0x|PScJg*1HZHWWpR%o*OPW#uarS
+bkCCDE%vuiB#7Uchj$rU~^>bP0l+XkKdh|et
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/main/resources/data/minecraft/tags/blocks/replaceable_plants.json b/src/main/resources/data/minecraft/tags/blocks/replaceable_plants.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..94d1b9ef7efc4267f82c8e1392269934e14a19ae
+--- /dev/null
++++ b/src/main/resources/data/minecraft/tags/blocks/replaceable_plants.json
+@@ -0,0 +1,8 @@
++{
++  "replace": false,
++  "values": [
++    "vestiges:short_grass",
++    "vestiges:patchy_grass",
++    "vestiges:medium_grass"
++  ]
++}
+diff --git a/src/main/resources/data/vestiges/loot_tables/blocks/medium_grass.json b/src/main/resources/data/vestiges/loot_tables/blocks/medium_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..9118f917d34309b92ab02f24e228cd439ade5a57
+--- /dev/null
++++ b/src/main/resources/data/vestiges/loot_tables/blocks/medium_grass.json
+@@ -0,0 +1,51 @@
++{
++  "type": "minecraft:block",
++  "pools": [
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "vestiges:medium_grass"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:match_tool",
++          "predicate": {
++            "items": [
++              "minecraft:shears"
++            ]
++          }
++        },
++        {
++          "condition": "minecraft:survives_explosion"
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "minecraft:wheat_seeds"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:table_bonus",
++          "enchantment": "minecraft:fortune",
++          "chances": [
++            0.125,
++            0.14285715,
++            0.16666667,
++            0.2
++          ]
++        },
++        {
++          "condition": "minecraft:survives_explosion"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/src/main/resources/data/vestiges/loot_tables/blocks/patchy_grass.json b/src/main/resources/data/vestiges/loot_tables/blocks/patchy_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..2623602c95491957a825993e5b16adfb4eabb3a8
+--- /dev/null
++++ b/src/main/resources/data/vestiges/loot_tables/blocks/patchy_grass.json
+@@ -0,0 +1,51 @@
++{
++  "type": "minecraft:block",
++  "pools": [
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "vestiges:patchy_grass"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:match_tool",
++          "predicate": {
++            "items": [
++              "minecraft:shears"
++            ]
++          }
++        },
++        {
++          "condition": "minecraft:survives_explosion"
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "minecraft:wheat_seeds"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:table_bonus",
++          "enchantment": "minecraft:fortune",
++          "chances": [
++            0.125,
++            0.14285715,
++            0.16666667,
++            0.2
++          ]
++        },
++        {
++          "condition": "minecraft:survives_explosion"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/src/main/resources/data/vestiges/loot_tables/blocks/short_grass.json b/src/main/resources/data/vestiges/loot_tables/blocks/short_grass.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..440956cfd8d387776f5fe63fa83183d6b685368b
+--- /dev/null
++++ b/src/main/resources/data/vestiges/loot_tables/blocks/short_grass.json
+@@ -0,0 +1,51 @@
++{
++  "type": "minecraft:block",
++  "pools": [
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "vestiges:short_grass"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:match_tool",
++          "predicate": {
++            "items": [
++              "minecraft:shears"
++            ]
++          }
++        },
++        {
++          "condition": "minecraft:survives_explosion"
++        }
++      ]
++    },
++    {
++      "rolls": 1,
++      "entries": [
++        {
++          "type": "minecraft:item",
++          "name": "minecraft:wheat_seeds"
++        }
++      ],
++      "conditions": [
++        {
++          "condition": "minecraft:table_bonus",
++          "enchantment": "minecraft:fortune",
++          "chances": [
++            0.125,
++            0.14285715,
++            0.16666667,
++            0.2
++          ]
++        },
++        {
++          "condition": "minecraft:survives_explosion"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/src/main/resources/data/vestiges/worldgen/configured_feature/grass_variants_patch.json b/src/main/resources/data/vestiges/worldgen/configured_feature/grass_variants_patch.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..43953ef3e0a929905b161a9ffbcd52cd7d0a9155
+--- /dev/null
++++ b/src/main/resources/data/vestiges/worldgen/configured_feature/grass_variants_patch.json
+@@ -0,0 +1,36 @@
++{
++  "type": "minecraft:random_patch",
++  "config": {
++    "tries": 64,
++    "xz_spread": 7,
++    "y_spread": 3,
++    "feature": {
++      "type": "minecraft:simple_block",
++      "config": {
++        "to_place": {
++          "type": "minecraft:weighted_state_provider",
++          "entries": [
++            {
++              "weight": 5,
++              "data": {
++                "Name": "vestiges:short_grass"
++              }
++            },
++            {
++              "weight": 3,
++              "data": {
++                "Name": "vestiges:patchy_grass"
++              }
++            },
++            {
++              "weight": 4,
++              "data": {
++                "Name": "vestiges:medium_grass"
++              }
++            }
++          ]
++        }
++      }
++    }
++  }
++}
+diff --git a/src/main/resources/data/vestiges/worldgen/placed_feature/grass_variants_patch.json b/src/main/resources/data/vestiges/worldgen/placed_feature/grass_variants_patch.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..26b19ec28f9f962c176c60aaa016d4db04153170
+--- /dev/null
++++ b/src/main/resources/data/vestiges/worldgen/placed_feature/grass_variants_patch.json
+@@ -0,0 +1,19 @@
++{
++  "feature": "vestiges:grass_variants_patch",
++  "placement": [
++    {
++      "type": "minecraft:count",
++      "count": 10
++    },
++    {
++      "type": "minecraft:in_square"
++    },
++    {
++      "type": "minecraft:heightmap",
++      "heightmap": "WORLD_SURFACE_WG"
++    },
++    {
++      "type": "minecraft:biome"
++    }
++  ]
++}
+ 
+EOF
+)
