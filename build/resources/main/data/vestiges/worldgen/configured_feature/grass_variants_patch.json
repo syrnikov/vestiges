@@ -5,32 +5,28 @@
     "xz_spread": 7,
     "y_spread": 3,
     "feature": {
-      "type": "minecraft:simple_block",
-      "config": {
-        "to_place": {
-          "type": "minecraft:weighted_state_provider",
-          "entries": [
-            {
-              "weight": 5,
-              "data": {
-                "Name": "vestiges:short_grass"
-              }
-            },
-            {
-              "weight": 3,
-              "data": {
-                "Name": "vestiges:patchy_grass"
-              }
-            },
-            {
-              "weight": 4,
-              "data": {
-                "Name": "vestiges:medium_grass"
-              }
-            }
-          ]
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "type": "minecraft:weighted_state_provider",
+            "entries": [
+              { "weight": 5, "data": { "Name": "vestiges:short_grass" } },
+              { "weight": 3, "data": { "Name": "vestiges:patchy_grass" } },
+              { "weight": 4, "data": { "Name": "vestiges:medium_grass" } }
+            ]
+          }
         }
-      }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": ["minecraft:air"]
+          }
+        }
+      ]
     }
   }
 }

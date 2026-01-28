@@ -1,0 +1,22 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "vestiges:medium_grass": 1,
+      "vestiges:short_grass": 1,
+      "vestiges:patchy_grass": 1
+    },
+    "minecraft:custom": {
+      "minecraft:sprint_one_cm": 267,
+      "minecraft:time_since_rest": 1789,
+      "minecraft:walk_one_cm": 7752,
+      "minecraft:total_world_time": 1803,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 27445,
+      "minecraft:sneak_time": 11,
+      "minecraft:play_time": 1789,
+      "minecraft:jump": 14,
+      "minecraft:time_since_death": 1789
+    }
+  },
+  "DataVersion": 4671
+}

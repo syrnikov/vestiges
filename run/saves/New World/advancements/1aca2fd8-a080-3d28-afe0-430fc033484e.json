@@ -1,0 +1,26 @@
+{
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2026-01-28 12:14:57 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/pale_moss_carpet": {
+    "criteria": {
+      "has_pale_moss_block": "2026-01-28 12:14:57 +0200"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:old_growth_birch_forest": "2026-01-28 12:15:36 +0200",
+      "minecraft:forest": "2026-01-28 12:15:38 +0200",
+      "minecraft:river": "2026-01-28 12:15:41 +0200",
+      "minecraft:birch_forest": "2026-01-28 12:15:06 +0200",
+      "minecraft:plains": "2026-01-28 12:15:43 +0200",
+      "minecraft:pale_garden": "2026-01-28 12:14:57 +0200"
+    },
+    "done": false
+  },
+  "DataVersion": 4671
+}

@@ -1,0 +1,2 @@
+/locate biome minecraft:pale_garden
+/tp @s 954 64 -441
