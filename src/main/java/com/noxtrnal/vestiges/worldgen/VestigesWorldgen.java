@@ -19,9 +19,9 @@ public final class VestigesWorldgen {
 			RegistryKeys.PLACED_FEATURE,
 			Identifier.of(Vestiges.MOD_ID, "pebble_patch")
 	);
-	public static final RegistryKey<PlacedFeature> RARE_FOREST_ROCK = RegistryKey.of(
+	public static final RegistryKey<PlacedFeature> FOREST_ROCK = RegistryKey.of(
 			RegistryKeys.PLACED_FEATURE,
-			Identifier.of(Vestiges.MOD_ID, "rare_forest_rock")
+			Identifier.of("minecraft", "forest_rock")
 	);
 
 	private VestigesWorldgen() {
@@ -41,7 +41,7 @@ public final class VestigesWorldgen {
 		BiomeModifications.addFeature(
 				BiomeSelectors.includeByKey(BiomeKeys.PLAINS),
 				GenerationStep.Feature.LOCAL_MODIFICATIONS,
-				RARE_FOREST_ROCK
+				FOREST_ROCK
 		);
 	}
 }
